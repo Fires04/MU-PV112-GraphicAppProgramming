@@ -9,6 +9,10 @@ import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_FRONT_AND_BACK;
 import static javax.media.opengl.GL2GL3.GL_LINE;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 import javax.media.opengl.glu.GLU;
 
 /**
@@ -44,11 +48,29 @@ public class Scene implements GLEventListener
     {
         GL2 gl = drawable.getGL().getGL2();
         
+        
+        gl.glEnable(GL_LIGHTING);//zapne svetla
+        gl.glEnable(GL_LIGHT0);//zapne svetlo 0
+        gl.glEnable(GL_LIGHT1);//zapne svetlo 1
+        
+        gl.glEnable(GL_DEPTH_TEST); //test depth bufferu
+        
         glu = new GLU();
         glut = new GLUT();
         gl.glClearColor(.6f,.6f,.6f,1);
+        gl.glClearDepthf(1.0f); //vsechny body budou nastaveny na vzdalenost 1 od kamery 
         
-        // TODO LIGHTS
+        gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, new float[]{1,0,0},0);
+        gl.glLightfv(GL_LIGHT0, GL_SPECULAR, new float[]{1,0,0},0);
+        
+        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, new float[]{0,1,0},0);
+        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, new float[]{0,1,0},0);
+        
+        
+        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, new float[]{1,1,1},0);
+        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, new float[]{1,1,1},0);
+        gl.glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 100); // teoreticky rozptyl odrazu
+        
     
     }
     
@@ -65,14 +87,39 @@ public class Scene implements GLEventListener
         
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();        
-        gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //zakomentovano aby jsme videli materialy
+       // gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         
         //  Camera
         polarCoordinates(azimuth, altitude, cartesian);
         glu.gluLookAt(cartesian[0], cartesian[1], cartesian[2], 0, 0, 0, 0, 1, 0);
         
+        //svetlo 0
+        //pridani svetla a bodu do svetla + animace svetla podle konstanty time
+        gl.glPushMatrix();
+            gl.glRotatef(time*20, 0, 1, 0);
+            gl.glTranslatef(4, 4, 4);
+            gl.glLightfv(GL_LIGHT0, GL_POSITION, new float[]{0,0,0,1},0);
+
+            gl.glTranslatef(4, 4, 4);
+            glut.glutSolidSphere(0.2f, 10, 10);
+
+        gl.glPopMatrix();
+        
+        //svetlo 1
+         //pridani svetla a bodu do svetla + animace svetla podle konstanty time
+        gl.glPushMatrix();
+            gl.glTranslatef(4, 4, -4);
+            gl.glLightfv(GL_LIGHT1, GL_POSITION, new float[]{0,0,0,1},0);
+
+            gl.glTranslatef(4, 4, -4);
+            glut.glutSolidSphere(0.2f, 10, 10);
+
+        gl.glPopMatrix();
+        
         // Draw Floor
-        drawFloor(gl, -10, 10, -10, 10, 1f, 1f);
+        //svetlo se pocita pouze na vertexech , cim vice vertexu tim lepsi svetlo logicky
+        drawFloor(gl, -10, 10, -10, 10, 0.1f, 0.1f);
         
         //  Draw obj
         float move = amplitude * (float)Math.cos(2 * Math.PI * time);
