@@ -127,6 +127,10 @@ public class Scene implements GLEventListener
         gl.glTranslatef(radius, amplitude + 1 + move, 0);
         glut.glutSolidTeapot(1f);
         
+        ObjLoader ld = new ObjLoader("Terrain.obj");
+        ld.load();
+        
+        
         gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
