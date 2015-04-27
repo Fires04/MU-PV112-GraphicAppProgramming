@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package zombieapocalypse;
+package Project1;
 
 import static javax.media.opengl.GL2.*;
 import javax.media.opengl.GL2;
@@ -43,8 +43,9 @@ public class Scene implements GLEventListener
 {
     private GLU glu;
     private GLUT glut;
-    private ObjLoader model;
-    private ObjLoader model2;
+    private ObjLoader modelFloor;
+    private ObjLoader modelCabinet;
+    private ObjLoader model3;
     
     private float time;
     private float amplitude;
@@ -62,17 +63,15 @@ public class Scene implements GLEventListener
     
     public Scene()
     {
-        //nacteni modelu terenu
-        model = new ObjLoader("\\resources\\Terrain.obj");
-        model.load();
+        //nacteni modelu
+        modelFloor = new ObjLoader("\\resources\\Floor.obj");
+        modelCabinet = new ObjLoader("\\resources\\cabinet.obj");
         
-        model2 = new ObjLoader("\\resources\\cabinet.obj");
-        model2.load();
         
         cartesian = new float[3];
         lightPos = new float[]{ 6, 4, 6, 1};
         lightPos2 = new float[]{ 4, 4, -4, 1};
-        diffuseMat = new float[]{.50f, .99f, .99f}; 
+        diffuseMat = new float[]{.50f, .50f, .50f}; 
         
         time = 0;
         amplitude = 2;
@@ -93,7 +92,7 @@ public class Scene implements GLEventListener
        //  Povolit svetla
        gl.glEnable(GL_LIGHTING);
        gl.glEnable(GL_LIGHT0);
-       gl.glEnable(GL_LIGHT1);
+       //gl.glEnable(GL_LIGHT1);
        gl.glEnable(GL_NORMALIZE);
        
        gl.glClearDepth(1.0f);
@@ -102,29 +101,29 @@ public class Scene implements GLEventListener
        //   Povolit Depth test
        gl.glEnable(GL_DEPTH_TEST);
 
-       //   Light 1
-       float[] diffuseLight1 = {1.0f, 0.1f, 0.99f}; 
-       float[] specularLight1 = {0.0f, 0.0f, 0.99f};
+       //   Light 0
+       float[] diffuseLight1 = {1.0f, 1.0f, 1.0f}; 
+       float[] specularLight1 = {1.0f, 1.0f, 1.0f};
        
        gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight1, 0);
        gl.glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 20.0f);
        gl.glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight1, 0);
        
        //   Light 2
-       float[] diffuseLight2 = {0.88f, 0.88f, 0.0f}; 
-       float[] specularLight2 = {0.78f, 0.78f, 0.0f};
+//       float[] diffuseLight2 = {0.88f, 0.88f, 0.0f}; 
+//       float[] specularLight2 = {0.78f, 0.78f, 0.0f};
+//
+//       gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight2, 0);
+//       gl.glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight2, 0);       
 
-       gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight2, 0);
-       gl.glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight2, 0);       
-
-       //   Material
-       float[] ambientMat = {0.1f, 0.1f, 0.1f}; 
-       float[] specularMat = {1.0f, 1.0f, 1.0f};
+         // Material
+//       float[] ambientMat = {0.1f, 0.1f, 0.1f}; 
+//       float[] specularMat = {1.0f, 1.0f, 1.0f};
        
-       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
-       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientMat, 0);
-       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularMat, 0);
-       gl.glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 100);
+//       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
+//       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientMat, 0);
+//       gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularMat, 0);
+//       gl.glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 100);
     }
 
     @Override
@@ -145,30 +144,30 @@ public class Scene implements GLEventListener
         polarCoordinates(azimuth, altitude, cartesian);
         glu.gluLookAt(cartesian[0] + XPos, cartesian[1] + YPos, cartesian[2] + ZPos, XPos, YPos, ZPos, 0, 1, 0);
         
-        // Light 1 position
-        gl.glPushMatrix();
-            gl.glRotated(time * 20, 0, 1, 0);
-            gl.glTranslatef(lightPos[0], lightPos[1], lightPos[2]);    
-            gl.glLightfv(GL_LIGHT0, GL_POSITION, new float[]{0,0,0,1}, 0);
-            gl.glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, new float[]{-1,-0.5f,-1},0);
-            glut.glutSolidSphere(0.2, 10, 10);
-        gl.glPopMatrix();
+//        // Light 1 position
+//        gl.glPushMatrix();
+//            gl.glRotated(time * 20, 0, 1, 0);
+//            gl.glTranslatef(lightPos[0], lightPos[1], lightPos[2]);    
+//            gl.glLightfv(GL_LIGHT0, GL_POSITION, new float[]{0,0,0,1}, 0);
+//            gl.glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, new float[]{-1,-0.5f,-1},0);
+//            glut.glutSolidSphere(0.2, 10, 10);
+//        gl.glPopMatrix();
         
-        // Light 2 position
-        gl.glPushMatrix();
-            gl.glTranslatef(lightPos2[0], lightPos2[1], lightPos2[2]);    
-            gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos2, 0);
-            glut.glutSolidSphere(0.2, 10, 10);
-        gl.glPopMatrix();
+//        // Light 2 position
+//        gl.glPushMatrix();
+//            gl.glTranslatef(lightPos2[0], lightPos2[1], lightPos2[2]);    
+//            gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos2, 0);
+//            glut.glutSolidSphere(0.2, 10, 10);
+//        gl.glPopMatrix();
         
         // Draw Floor
         // zmena materialu floor
-        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, new float[]{ 1.0f, 0.0f,0 }, 0);
-        drawFloor(gl, -10, 10, -10, 10, .1f, .1f);
+        //gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, new float[]{ 1.0f, 0.0f,0 }, 0);
+        //drawFloor(gl, -10, 10, -10, 10, .1f, .1f);
         
-        drawCoordinateSystem(gl);
         
-        float move = amplitude * (float)Math.cos(2 * Math.PI * time);
+        
+        //float move = amplitude * (float)Math.cos(2 * Math.PI * time);
         
         // zmena materialu pre konvicky
 //        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
@@ -204,8 +203,31 @@ public class Scene implements GLEventListener
 //            glut.glutSolidTeapot(1f);
 //        gl.glPopMatrix();
         
+        
+        
+        //Vykreslime si system souradnic
+        gl.glPushMatrix();
+        drawCoordinateSystem(gl);
+        gl.glPopMatrix();
+        
+        //podlaha
+        gl.glPushMatrix();
+         // Material
+        float[] ambientMat = {0.5f, 0.5f, 0.5f}; 
+        float[] specularMat = {1.0f, 1.0f, 1.0f};  
+        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
+        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientMat, 0);
+        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularMat, 0);
+        drawObj(gl, modelFloor);
+        gl.glScaled(0.5, 0.5, 0.5);
+        gl.glPopMatrix();
+        
+        
+        gl.glPushMatrix();
         gl.glScaled(0.1, 0.1, 0.1);
-        drawObj(gl, model);
+        gl.glTranslated(0, 0, 0);
+        drawObj(gl, modelCabinet);
+        gl.glPopMatrix();
 
     }
 
@@ -280,7 +302,7 @@ public class Scene implements GLEventListener
     private void drawObj(GL2 gl, ObjLoader model)
     {            
         gl.glEnableClientState(GL_VERTEX_ARRAY);
-            gl.glEnableClientState(GL_NORMAL_ARRAY);
+        gl.glEnableClientState(GL_NORMAL_ARRAY);
             gl.glVertexPointer(3, GL_FLOAT, 0, model.getVerticesBuffer());
             gl.glNormalPointer(GL_FLOAT, 0, model.getNormalsBuffer());
             // Vykreslenie celeho modelu jednym prikazom

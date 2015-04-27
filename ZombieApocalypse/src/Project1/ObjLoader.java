@@ -1,4 +1,4 @@
-package zombieapocalypse;
+package Project1;
 
 import com.jogamp.common.nio.Buffers;
 import java.io.BufferedReader;
@@ -30,6 +30,7 @@ public class ObjLoader {
 
     public ObjLoader(String path) {
         this.path = path;
+        this.load();
     }
 
     public void load() {

@@ -1,4 +1,4 @@
-package zombieapocalypse;
+package Project1;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
@@ -62,9 +62,8 @@ public class MainWindow extends javax.swing.JFrame {
         CanvasPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 400));
 
-        Splitter.setDividerLocation(600);
+        Splitter.setDividerLocation(1000);
 
         GuiPanel.setLayout(new javax.swing.BoxLayout(GuiPanel, javax.swing.BoxLayout.Y_AXIS));
 
@@ -91,7 +90,7 @@ public class MainWindow extends javax.swing.JFrame {
         GuiPanel.add(AltitudeLabel);
 
         AltitudeSlider.setMajorTickSpacing(10);
-        AltitudeSlider.setMaximum(360);
+        AltitudeSlider.setMaximum(90);
         AltitudeSlider.setPaintTicks(true);
         AltitudeSlider.setToolTipText("Altitude");
         AltitudeSlider.setValue(45);
