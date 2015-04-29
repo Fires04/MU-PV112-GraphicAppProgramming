@@ -1,0 +1,38 @@
+Ovládací prvky aplikace:
+
+Pohybové klávesy:
+(smìry pohybu nejsou vztaženy k výchozí souøadnicové soustavì prostoru, ale k orientaci pohledu kamery)
+
+	W 		pohyb dopøedu
+	S 		pohyb dozadu
+	A 		úkrok vlevo
+	D 		úkrok vpravo
+
+	Q		snížení výšky
+	E		zvýšení výšky
+
+Klávesy pohledu:
+
+	UP_ARROW 	pohled nahoru
+	DOWN_ARROW	pohled dolù
+	LEFT_ARROW	pohled vlevo
+	RIGHT_ARROW	pohled vpravo
+
+Ostatní:
+
+	R 		návrat do výchozího bodu (reset pohledového vektoru + pozice kamery v prostoru)
+	X 		zapnutí/vypnutí ovládání pohledu pomocí myši (klasické ovládání jako u vìtšiny FPS)
+	ESCAPE		vypnutí aplikace
+
+Sliders:
+
+	movementspeed 		nastavení rychlosti pohybu
+	look sensitivity	nastavení citlivosti rozhlížení
+	world time speed	nastavení rychlosti èasu (ovlivòuje rychlost chodu hodin)	
+
+
+
+Bonus:
+
+Ovládání pomocí myši, algoritmy øídící pohybové a pohledové vektory.
+

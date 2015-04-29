@@ -1,34 +1,25 @@
-package Project1;
+package pv112_project_1;
 
-import com.jogamp.common.nio.Buffers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjLoaderNormal {
+public class ObjLoader {
 
     private String path;
     
     private List<float[]> vertices;
     private List<float[]> normals;
+    private List<float[]> textures;
     private List<int[]> vertexIndices;
     private List<int[]> normalIndices;
-    
-    // Potrebne pre vykreslenei modelu Terrain.obj pomocou vertex arrays
-    // nepotrebujete ak kreslite cez glBegin() glEnd()
-    private FloatBuffer verticesBuffer;
-    private FloatBuffer normalsBuffer;
-    private IntBuffer vertexIndicesBuffer;
-    private IntBuffer normalsIndicesBuffer;
-    // *****************************************************************
+    private List<int[]> textureIndices;
     
     private BufferedReader inReader;
 
-    public ObjLoaderNormal(String path) {
+    public ObjLoader(String path) {
         this.path = path;
     }
 
@@ -36,9 +27,11 @@ public class ObjLoaderNormal {
         /** Mesh containing the loaded object */
         vertices = new ArrayList<float[]>();
         normals = new ArrayList<float[]>();
+        textures = new ArrayList<float[]>();
         vertexIndices = new ArrayList<int[]>();
         normalIndices = new ArrayList<int[]>();
-                
+        textureIndices = new ArrayList<int[]>();
+        
         String line;
         try {
             inReader = new BufferedReader(new InputStreamReader(
@@ -72,7 +65,13 @@ public class ObjLoaderNormal {
                     
                 } else if (line.startsWith("vt ")) {
                     
-                    // TODO: texturove suradnice
+                    String[] normStr = line.split("\\s+");
+                    float[] texture = new float[3];
+                    
+                    texture[0] = Float.parseFloat(normStr[1]);
+                    texture[1] = Float.parseFloat(normStr[2]);
+                    texture[2] = Float.parseFloat(normStr[3]);
+                    textures.add(texture);
                     
                 } else if (line.startsWith("f ")) {
                     
@@ -85,6 +84,14 @@ public class ObjLoaderNormal {
                     vertexIndices.add(faceVert);
                     
                     // TODO: indexy texturovych suradnic (2. hodnota z trojice cisel)
+                    if (faceStr[1].split("/").length >= 2) {
+                        int[] faceTex = new int[3];
+
+                        faceTex[0] = Integer.parseInt(faceStr[1].split("/")[1]) - 1;
+                        faceTex[1] = Integer.parseInt(faceStr[2].split("/")[1]) - 1;
+                        faceTex[2] = Integer.parseInt(faceStr[3].split("/")[1]) - 1;
+                        textureIndices.add(faceTex);
+                    }
                     
                     if (faceStr[1].split("/").length >= 3) {
                         int[] faceNorm = new int[3];
@@ -96,44 +103,6 @@ public class ObjLoaderNormal {
                     }
                 }
             }
-            
-            
-        // Potrebne pre vykreslenei modelu Terrain.obj pomocou vertex arrays
-        // nepotrebujete ak kreslite cez glBegin() glEnd()
-        verticesBuffer = Buffers.newDirectFloatBuffer(vertices.size() * 3);
-            for (float[] vertex : vertices) {
-                verticesBuffer.put(vertex[0]);
-                verticesBuffer.put(vertex[1]);
-                verticesBuffer.put(vertex[2]);
-            }
-        verticesBuffer.rewind();
-        
-        normalsBuffer = Buffers.newDirectFloatBuffer(normals.size() * 3);
-        for (float[] normal : normals) {
-                normalsBuffer.put(normal[0]);
-                normalsBuffer.put(normal[1]);
-                normalsBuffer.put(normal[2]);
-            }
-        normalsBuffer.rewind();
-        
-        vertexIndicesBuffer = Buffers.newDirectIntBuffer(vertexIndices.size() * 3);
-        for (int[] vertexIndex : vertexIndices) {
-                vertexIndicesBuffer.put(vertexIndex[0]);
-                vertexIndicesBuffer.put(vertexIndex[1]);
-                vertexIndicesBuffer.put(vertexIndex[2]);
-            }
-        vertexIndicesBuffer.rewind();
-        
-        normalsIndicesBuffer = Buffers.newDirectIntBuffer(normalIndices.size() * 3);
-        for (int[] normalIndex : normalIndices) {
-                normalsIndicesBuffer.put(normalIndex[0]);
-                normalsIndicesBuffer.put(normalIndex[1]);
-                normalsIndicesBuffer.put(normalIndex[2]);
-            }
-        normalsIndicesBuffer.rewind();
-        // *******************************************************************
-        
-        
         } catch (IOException ex) {
             System.out.println("Unable to load " + path + " file: " + ex.getMessage());
         }
@@ -146,6 +115,10 @@ public class ObjLoaderNormal {
     public List<float[]> getNormals() {
         return normals;
     }
+    
+    public List<float[]> getTextures() {
+        return textures;
+    }
 
     public List<int[]> getVertexIndices() {
         return vertexIndices;
@@ -155,19 +128,7 @@ public class ObjLoaderNormal {
         return normalIndices;
     }
     
-    public FloatBuffer getVerticesBuffer() {
-        return verticesBuffer;
-    }
-
-    public FloatBuffer getNormalsBuffer() {
-        return normalsBuffer;
-    }
-
-    public IntBuffer getVertexIndicesBuffer() {
-        return vertexIndicesBuffer;
-    }
-
-    public IntBuffer getNormalIndicesBuffer() {
-        return normalsIndicesBuffer;
+    public List<int[]> getTextureIndices() {
+        return textureIndices;
     }
 }

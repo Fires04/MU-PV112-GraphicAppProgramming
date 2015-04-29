@@ -10,7 +10,9 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import com.jogamp.opengl.util.gl2.GLUT;
+import static javax.media.opengl.GL.GL_BACK;
 import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static javax.media.opengl.GL.GL_CULL_FACE;
 import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DEPTH_TEST;
 import static javax.media.opengl.GL.GL_FLOAT;
@@ -18,6 +20,7 @@ import static javax.media.opengl.GL.GL_FRONT_AND_BACK;
 import static javax.media.opengl.GL.GL_TRIANGLES;
 import static javax.media.opengl.GL.GL_UNSIGNED_INT;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_COLOR_MATERIAL;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT1;
@@ -30,6 +33,7 @@ import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPOT_CUTOFF;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPOT_DIRECTION;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
+import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW_MATRIX;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 import static javax.media.opengl.fixedfunc.GLPointerFunc.GL_NORMAL_ARRAY;
 import static javax.media.opengl.fixedfunc.GLPointerFunc.GL_VERTEX_ARRAY;
@@ -61,11 +65,19 @@ public class Scene implements GLEventListener
     private float YPos;
     private float ZPos;
     
+    float[] viewMatrix;
+        float[] clockViewMatrix;
+    float[] cabinetViewMatrix;
+    private final ObjLoader clock;
+    
+    
     public Scene()
     {
         //nacteni modelu
         modelFloor = new ObjLoader("\\resources\\Floor.obj");
         modelCabinet = new ObjLoader("\\resources\\cabinet.obj");
+        clock = new ObjLoader("\\resources\\clock.obj");
+        
         
         
         cartesian = new float[3];
@@ -91,24 +103,29 @@ public class Scene implements GLEventListener
                 
        //  Povolit svetla
        gl.glEnable(GL_LIGHTING);
-       gl.glEnable(GL_LIGHT0);
-       //gl.glEnable(GL_LIGHT1);
        gl.glEnable(GL_NORMALIZE);
        
+       //nastaveni vychozich hodnot pozadi
        gl.glClearDepth(1.0f);
-       gl.glClearColor(.6f,.6f,.6f,1);
+       gl.glClearColor(.3f,.3f,.3f,0);
         
-       //   Povolit Depth test
+       //Povolit Depth test - kontrola toho co je vskutku nutne vykreslit
        gl.glEnable(GL_DEPTH_TEST);
+       //zapnuti barev materialu
+       gl.glEnable(GL_COLOR_MATERIAL);
+       //osekame zadni strany
+       gl.glCullFace(GL_BACK);
+       gl.glEnable(GL_CULL_FACE);
+       
 
        //   Light 0
-       float[] diffuseLight1 = {1.0f, 1.0f, 1.0f}; 
-       float[] specularLight1 = {1.0f, 1.0f, 1.0f};
-       
-       gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight1, 0);
-       gl.glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 20.0f);
-       gl.glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight1, 0);
-       
+       float[] diffuseLight0 = {1.0f, 1.0f, 1.0f}; 
+       float[] specularLight0 = {1.0f, 1.0f, 1.0f}; 
+       gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight0, 0);
+       //gl.glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 20.0f);
+       gl.glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight0, 0);
+       gl.glEnable(GL_LIGHT0);
+//       
        //   Light 2
 //       float[] diffuseLight2 = {0.88f, 0.88f, 0.0f}; 
 //       float[] specularLight2 = {0.78f, 0.78f, 0.0f};
@@ -137,9 +154,10 @@ public class Scene implements GLEventListener
         GL2 gl = drawable.getGL().getGL2();
         time += 0.01;
         
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        gl.glLoadIdentity();        
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
                 
+        
+       
         //  Camera
         polarCoordinates(azimuth, altitude, cartesian);
         glu.gluLookAt(cartesian[0] + XPos, cartesian[1] + YPos, cartesian[2] + ZPos, XPos, YPos, ZPos, 0, 1, 0);
@@ -205,29 +223,60 @@ public class Scene implements GLEventListener
         
         
         
-        //Vykreslime si system souradnic
-        gl.glPushMatrix();
-        drawCoordinateSystem(gl);
-        gl.glPopMatrix();
+//        //Vykreslime si system souradnic
+//        gl.glPushMatrix();
+//        drawCoordinateSystem(gl);
+//        gl.glPopMatrix();
+//        
+//        //podlaha
+//        gl.glPushMatrix();
+//         // Material
+//        float[] ambientMat = {0.5f, 0.5f, 0.5f}; 
+//        float[] specularMat = {1.0f, 1.0f, 1.0f};  
+//        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
+//        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientMat, 0);
+//        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularMat, 0);
+//        drawObj(gl, modelFloor);
+//        gl.glScaled(0.5, 0.5, 0.5);
+//        gl.glPopMatrix();
+//        
+//        
+//        gl.glPushMatrix();
+//        gl.glScaled(0.1, 0.1, 0.1);
+//        gl.glTranslated(0, 0, 0);
+//        drawObj(gl, modelCabinet);
+//        gl.glPopMatrix();
         
-        //podlaha
-        gl.glPushMatrix();
-         // Material
-        float[] ambientMat = {0.5f, 0.5f, 0.5f}; 
-        float[] specularMat = {1.0f, 1.0f, 1.0f};  
-        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMat, 0);
-        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambientMat, 0);
-        gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularMat, 0);
-        drawObj(gl, modelFloor);
-        gl.glScaled(0.5, 0.5, 0.5);
-        gl.glPopMatrix();
+        viewMatrix = new float[16];
+        clockViewMatrix = new float[16];
+        cabinetViewMatrix = new float[16];
         
         
-        gl.glPushMatrix();
-        gl.glScaled(0.1, 0.1, 0.1);
-        gl.glTranslated(0, 0, 0);
-        drawObj(gl, modelCabinet);
-        gl.glPopMatrix();
+        
+        gl.glScalef(0.05f, 0.05f, 0.05f);
+        gl.glGetFloatv(GL_MODELVIEW_MATRIX, viewMatrix, 0);
+        
+        gl.glTranslatef(100, 150, -10);
+        gl.glGetFloatv(GL_MODELVIEW_MATRIX, clockViewMatrix, 0);
+        
+        gl.glLoadMatrixf(viewMatrix, 0);
+        gl.glTranslatef(320, 0, 200);
+        gl.glRotatef(-90, 0, 1, 0);
+        gl.glGetFloatv(GL_MODELVIEW_MATRIX, cabinetViewMatrix, 0);
+        
+        
+        gl.glColor3f(1, 1, 0);   
+        
+        gl.glLoadMatrixf(viewMatrix, 0);
+        gl.glTranslatef(70,81,20);
+        gl.glRotatef(40, 0, 1, 0);
+        gl.glScalef(7f, 7f, 7f);
+        glut.glutSolidTeapot(2);
+        
+        gl.glLoadMatrixf(clockViewMatrix, 0);
+        gl.glColor3f(0, 0, 0.5f);
+        drawObj(gl, clock);
+        
 
     }
 

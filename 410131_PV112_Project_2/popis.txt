@@ -1,0 +1,30 @@
+Ovládací prvky aplikace:
+
+Pohybové klávesy:
+(smìry pohybu nejsou vztaženy k výchozí souøadnicové soustavì prostoru, ale k orientaci pohledu kamery)
+
+	W 		pohyb dopøedu
+	S 		pohyb dozadu
+	A 		úkrok vlevo
+	D 		úkrok vpravo
+
+Klávesy pohledu:
+
+	UP_ARROW 	pohled nahoru
+	DOWN_ARROW	pohled dolù
+	LEFT_ARROW	pohled vlevo
+	RIGHT_ARROW	pohled vpravo
+
+Ostatní:
+
+	R 		návrat do výchozího bodu (reset pohledového vektoru + pozice kamery v prostoru)
+	X 		zapnutí/vypnutí ovládání pohledu pomocí myši (klasické ovládání jako u vìtšiny FPS)
+	ESCAPE		vypnutí aplikace
+
+Svìtla:
+
+	JToggleButton-y
+
+Animované svìtlo - hodiny
+Reflektorované   - skøíò
+

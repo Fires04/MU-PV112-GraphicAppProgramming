@@ -62,8 +62,9 @@ public class MainWindow extends javax.swing.JFrame {
         CanvasPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1400, 800));
 
-        Splitter.setDividerLocation(1000);
+        Splitter.setDividerLocation(800);
 
         GuiPanel.setLayout(new javax.swing.BoxLayout(GuiPanel, javax.swing.BoxLayout.Y_AXIS));
 
@@ -75,7 +76,7 @@ public class MainWindow extends javax.swing.JFrame {
         AzimuthSlider.setMaximum(360);
         AzimuthSlider.setPaintTicks(true);
         AzimuthSlider.setToolTipText("Azimuth");
-        AzimuthSlider.setValue(0);
+        AzimuthSlider.setValue(38);
         AzimuthSlider.setAlignmentX(0.0F);
         AzimuthSlider.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         AzimuthSlider.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -93,7 +94,7 @@ public class MainWindow extends javax.swing.JFrame {
         AltitudeSlider.setMaximum(90);
         AltitudeSlider.setPaintTicks(true);
         AltitudeSlider.setToolTipText("Altitude");
-        AltitudeSlider.setValue(45);
+        AltitudeSlider.setValue(36);
         AltitudeSlider.setAlignmentX(0.0F);
         AltitudeSlider.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         AltitudeSlider.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -112,7 +113,7 @@ public class MainWindow extends javax.swing.JFrame {
         XPos.setMinimum(-120);
         XPos.setPaintTicks(true);
         XPos.setToolTipText("Azimuth");
-        XPos.setValue(0);
+        XPos.setValue(39);
         XPos.setAlignmentX(0.0F);
         XPos.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         XPos.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -131,7 +132,7 @@ public class MainWindow extends javax.swing.JFrame {
         YPos.setMinimum(-120);
         YPos.setPaintTicks(true);
         YPos.setToolTipText("Altitude");
-        YPos.setValue(0);
+        YPos.setValue(27);
         YPos.setAlignmentX(0.0F);
         YPos.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         YPos.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -150,7 +151,7 @@ public class MainWindow extends javax.swing.JFrame {
         ZPos.setMinimum(-120);
         ZPos.setPaintTicks(true);
         ZPos.setToolTipText("Altitude");
-        ZPos.setValue(0);
+        ZPos.setValue(14);
         ZPos.setAlignmentX(0.0F);
         ZPos.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         ZPos.addChangeListener(new javax.swing.event.ChangeListener() {
